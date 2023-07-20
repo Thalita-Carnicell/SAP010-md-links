@@ -1,18 +1,36 @@
-const fs = require ('fs'); 
+//função p extrair links
 
+const fs = require('fs');
 
-function mdlinks ( directory) {
+function extractLinksFromFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        reject(`Erro na leitura do arquivo: ${err.message}`);
+        return;
+      }
 
- fs.readFile('./README.md', 'utf-8', (err, data) => {
-  if(err) {
-      console.error(err);
-      return
-  } 
+      const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/gm;
+      const links = [];
+      let match;
 
-  //imprime os links com caracteres
-  const regex = /\[([^[\]]?)\]\((https?:\/\/[^\s?#.].[^\s])\)/gm
-  const links = data.match(regex);
-  console.log(links);  
+      while ((match = linkRegex.exec(data)) !== null) {
+        const [fullMatch, text, href] = match;
+        links.push({ text, href });
+      }
 
-});
+      resolve(links);
+    });
+  });
 }
+
+// Exemplo de uso da função:
+const filePath = './src/files/files.md';
+extractLinksFromFile(filePath)
+  .then((links) => {
+    console.log('Links encontrados no arquivo:');
+    console.table(links);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
