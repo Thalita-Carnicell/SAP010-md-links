@@ -13,4 +13,4 @@ mdLinks(path, options).then(linksEncontrados);
   .then(links => {
     // => [{ href, text, file, status, ok }, ...]
   })
-  .catch(console.error);*/
+  .catch(console.error);*/                                             
