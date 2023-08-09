@@ -38,6 +38,48 @@ it ('deve retornar um array com informações quando o arquivo tiver links',() =
      ]);
   });
 });
+// Teste ler diretório
+
+describe("lerDiretorioMd", () => {
+  it("deve retornar um array com informações dos links encontrados nos arquivos do diretório", (done) => {
+    const directoryPath = path.resolve(__dirname, "../src/arquivos");
+    const filePath = path.resolve(__dirname, "../src/arquivos/arquivo.md"); 
+
+    const expectedLinks = [
+      {
+        text: 'Google',
+        url: 'https://www.google.com',
+        file: filePath,
+      },
+      {
+        text: 'GitHub',
+        url: 'https://github.com/',
+        file: filePath,
+      },
+      {
+        text: 'GitHub',
+        url: 'https://github.com/',
+        file: filePath,
+      },
+      {
+        text: 'Figma',
+        url: 'https://ww.figma.com/',
+        file: filePath,
+      },
+    ];
+
+    lerDiretorioMd(directoryPath)
+      .then((promises) => Promise.all(promises)) 
+      .then((result) => {
+        const flattenedResult = result.flat(); 
+        expect(flattenedResult).toEqual(expectedLinks);
+        done();
+      })
+      .catch((error) => {
+        done(error);
+      });
+  }, 10000); 
+});
 
 // teste de validar
 
@@ -105,3 +147,79 @@ describe('getStats', () => {
   });
 });
 
+describe('mdLinks', () => {
+  const filePath = path.resolve(__dirname, '../src/arquivos/arquivo.md');
+  const invalidFilePath = path.resolve(__dirname, '/caminho/invalido.md');
+  const emptyDirectoryPath = path.resolve(__dirname, '../src/arquivos/vazio');
+  const directoryPath = path.resolve(__dirname, '../src/arquivos');
+
+  it('deve retornar os links de um arquivo individual corretamente', () => {
+    return mdLinks(filePath).then((result) => {
+      // Faça as asserções necessárias para verificar o resultado
+      // Por exemplo, verifique se o resultado é uma array de objetos contendo as propriedades text, url e file
+      expect(Array.isArray(result)).toBe(true);
+      result.forEach((link) => {
+        expect(link).toHaveProperty('text');
+        expect(link).toHaveProperty('url');
+        expect(link).toHaveProperty('file', filePath);
+      });
+    });
+  });
+
+  it('deve retornar um erro quando o arquivo não existe', () => {
+    return mdLinks(invalidFilePath).catch((error) => {
+      expect(error).toContain('Erro:');
+    });
+  });
+
+  it('deve retornar os links de um diretório corretamente', () => {
+    return mdLinks(directoryPath).then((result) => {
+      // Faça as asserções necessárias para verificar o resultado
+    });
+  });
+
+  it('deve retornar os links de um diretório quando opção "validate" é passada', () => {
+    const options = { validate: true };
+
+    return mdLinks(directoryPath, options).then((result) => {
+      // Faça as asserções necessárias para verificar o resultado
+    });
+  });
+
+  it('deve retornar os links de um diretório quando opção "stats" é passada', () => {
+    const options = { stats: true };
+
+    return mdLinks(directoryPath, options).then((result) => {
+      // Faça as asserções necessárias para verificar o resultado
+    });
+  });
+
+  it('deve retornar as estatísticas corretamente quando a opção "stats" é passada', () => {
+    const options = { stats: true };
+
+    return mdLinks(filePath, options).then((result) => {
+      // Verifique se a saída está correta para este arquivo quando a opção "stats" é passada
+      expect(result).toHaveProperty('totalLinks', 4);
+      expect(result).toHaveProperty('uniqueLinks', 3);
+    });
+  });
+
+  it('deve retornar os links de um diretório quando opções "validate" e "stats" são passadas', () => {
+    const options = { validate: true, stats: true };
+
+    return mdLinks(directoryPath, options).then((result) => {
+      // Faça as asserções necessárias para verificar o resultado
+    });
+  });
+
+  it('deve retornar as estatísticas corretamente quando as opções "validate" e "stats" são passadas', () => {
+    const options = { validate: true, stats: true };
+  
+    return mdLinks(filePath, options).then((result) => {
+      // Verifique se a saída está correta para este arquivo quando as opções "validate" e "stats" são passadas
+      expect(result.stats).toHaveProperty('totalLinks', 4);
+      expect(result.stats).toHaveProperty('uniqueLinks', 3);
+      expect(result.stats).toHaveProperty('totalBrokenLinks', 1);
+    });
+  });
+});

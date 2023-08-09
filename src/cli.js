@@ -33,7 +33,9 @@ function print(options={validate:true,stats:true},result){
     } else if (options.validate) {
         result.links.forEach(printLink);
     } else {
-        console.error ("Erro")
+      console.log(`File:${result.file}`);
+      console.log(`Text:${result.text}`);
+      console.log(`Url:${result.url}`);
     }
 }
   mdLinks(caminhoAbsolutoDoArquivo, { validate: isValidate, stats: isStats })
