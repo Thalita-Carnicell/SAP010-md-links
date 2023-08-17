@@ -1,4 +1,4 @@
-const {lerArquivos, lerDiretorioMd, validateLinks, mdLinks, getStats} = require('../src/index');
+const {lerArquivos, validateLinks, getStats, lerDiretorioMd, mdLinks} = require('../src/index');
 const path = require('path');
 const fs = require('fs');
 
@@ -21,64 +21,26 @@ it ('deve retornar um array com informações quando o arquivo tiver links',() =
       },
       {
         text: 'GitHub',
-        url: 'https://github.com/',
+        url: 'https://github.com',
         file: filePath,
       },
       {
-        text: 'GitHub',
-        url: 'https://github.com/',
+        text: 'Laboratoria',
+        url: 'https://www.laboratoria.la/br',
         file: filePath,
       },
       {
-        text: 'Figma',
-        url: 'https://ww.figma.com/',
+        text: 'Teste Link Quebrado',
+        url: 'https://www.xxxxxxxxxlaboratoria.la/br',
         file: filePath,
       },
-     
+      {
+        text: 'Laboratoria',
+        url: 'https://www.laboratoria.la/br',
+        file: filePath,
+      },
      ]);
   });
-});
-// Teste ler diretório
-
-describe("lerDiretorioMd", () => {
-  it("deve retornar um array com informações dos links encontrados nos arquivos do diretório", (done) => {
-    const directoryPath = path.resolve(__dirname, "../src/arquivos");
-    const filePath = path.resolve(__dirname, "../src/arquivos/arquivo.md"); 
-
-    const expectedLinks = [
-      {
-        text: 'Google',
-        url: 'https://www.google.com',
-        file: filePath,
-      },
-      {
-        text: 'GitHub',
-        url: 'https://github.com/',
-        file: filePath,
-      },
-      {
-        text: 'GitHub',
-        url: 'https://github.com/',
-        file: filePath,
-      },
-      {
-        text: 'Figma',
-        url: 'https://ww.figma.com/',
-        file: filePath,
-      },
-    ];
-
-    lerDiretorioMd(directoryPath)
-      .then((promises) => Promise.all(promises)) 
-      .then((result) => {
-        const flattenedResult = result.flat(); 
-        expect(flattenedResult).toEqual(expectedLinks);
-        done();
-      })
-      .catch((error) => {
-        done(error);
-      });
-  }, 10000); 
 });
 
 // teste de validar
@@ -120,16 +82,16 @@ describe('validateLinks', () => {
     }).catch(done.fail);
   });
 });
-
-//Teste getStats
+// test stats
 
 describe('getStats', () => {
   it('Mostrar total de links e links únicos quando der o --stats', () => {
     const mockArrayLinks = [
       { url: 'https://www.google.com' },
-      { url: 'https://github.com/' },
-      { url: 'https://github.com/' },
-      { url: 'https://ww.figma.com/' },
+      { url: 'https://github.com' },
+      { url: 'https://www.laboratoria.la/br' },
+      { url: 'https://www.xxxxxxxxxlaboratoria.la/br' },
+      { url: 'https://www.laboratoria.la/br' },
     ];
 
     const options = {
@@ -138,8 +100,8 @@ describe('getStats', () => {
     };
 
     const result = {
-      totalLinks: 4,
-      uniqueLinks: 3,
+      totalLinks: 5,
+      uniqueLinks: 4,
     };
 
     const res = getStats(mockArrayLinks, options);
@@ -147,10 +109,55 @@ describe('getStats', () => {
   });
 });
 
+describe("lerDiretorioMd", () => {
+  it("deve retornar um array com informações dos links encontrados nos arquivos do diretório", (done) => {
+    const directoryPath = path.resolve(__dirname, "../src/arquivos");
+    const filePath = path.resolve(__dirname, "../src/arquivos/arquivo.md"); 
+
+    const expectedLinks = [
+      {
+        text: 'Google',
+        url: 'https://www.google.com',
+        file: filePath,
+      },
+      {
+        text: 'GitHub',
+        url: 'https://github.com',
+        file: filePath,
+      },
+      {
+        text: 'Laboratoria',
+        url: 'https://www.laboratoria.la/br',
+        file: filePath,
+      },
+      {
+        text: 'Teste Link Quebrado',
+        url: 'https://www.xxxxxxxxxlaboratoria.la/br',
+        file: filePath,
+      },
+      {
+        text: 'Laboratoria',
+        url: 'https://www.laboratoria.la/br',
+        file: filePath,
+      },
+    ];
+
+    lerDiretorioMd(directoryPath)
+      .then((promises) => Promise.all(promises)) 
+      .then((result) => {
+        const flattenedResult = result.flat(); 
+        expect(flattenedResult).toEqual(expectedLinks);
+        done();
+      })
+      .catch((error) => {
+        done(error);
+      });
+  }, 10000); 
+});
+
 describe('mdLinks', () => {
   const filePath = path.resolve(__dirname, '../src/arquivos/arquivo.md');
   const invalidFilePath = path.resolve(__dirname, '/caminho/invalido.md');
-  const emptyDirectoryPath = path.resolve(__dirname, '../src/arquivos/vazio');
   const directoryPath = path.resolve(__dirname, '../src/arquivos');
 
   it('deve retornar os links de um arquivo individual corretamente', () => {
@@ -199,8 +206,8 @@ describe('mdLinks', () => {
 
     return mdLinks(filePath, options).then((result) => {
       // Verifique se a saída está correta para este arquivo quando a opção "stats" é passada
-      expect(result).toHaveProperty('totalLinks', 4);
-      expect(result).toHaveProperty('uniqueLinks', 3);
+      expect(result).toHaveProperty('totalLinks', 5);
+      expect(result).toHaveProperty('uniqueLinks', 4);
     });
   });
 
@@ -217,8 +224,8 @@ describe('mdLinks', () => {
   
     return mdLinks(filePath, options).then((result) => {
       // Verifique se a saída está correta para este arquivo quando as opções "validate" e "stats" são passadas
-      expect(result.stats).toHaveProperty('totalLinks', 4);
-      expect(result.stats).toHaveProperty('uniqueLinks', 3);
+      expect(result.stats).toHaveProperty('totalLinks', 5);
+      expect(result.stats).toHaveProperty('uniqueLinks', 4);
       expect(result.stats).toHaveProperty('totalBrokenLinks', 1);
     });
   });
