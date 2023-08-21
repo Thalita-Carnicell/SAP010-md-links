@@ -21,7 +21,7 @@ O Objetivo deste projeto é desenvolver uma biblioteca que lê arquivos Markdown
 
 ## 2. Guia de instalação e uso ✅
 
-Instale a biblioteca no terminal através do comando: <strong>`npm install md-links-nicole-tsingas`</strong>
+Instale a biblioteca no terminal através do comando: <strong>`npm install thalita-carnicell-mdlinks`</strong>
 
 Após a instalação, certifique de ter um arquivo <strong>.md com links</strong> dentro.
 
@@ -29,14 +29,14 @@ Após a instalação, certifique de ter um arquivo <strong>.md com links</strong
 
 1. Rode o comando <strong>`mdlinks` + o caminho do seu arquivo </strong>, e será retornado o caminho, text e o link do arquivo seleciondao. Veja o exemplo abaixo:  
 
-     ![mdlinks](./src/images/mdlinks.png)
+     ![mdlinks](./src/img/caminhoDoArquivo.png)
 
 2. Se você deseja validar os links desse arquivo, utilize a propriedade <strong>--validade</strong>, esta fará uma requisição HTTP e retornará o status e ok do seu link. <br>
 Comando: <br>
 `md-links <caminho-do-arquivo> --validate`. <br>
  Veja o exemplo abaixo:
 
-    ![validate](./src/images/validate.png)
+    ![validate](./src/img/validate.png)
 
 3. Se você deseja verificar as estatistiscas dos links desse arquivo, utilize a propriedade <strong>--stats</strong>, esta retornará o total de links encontrados no arquivo e quais desses são unicos. <br>
 Comando: <br>
