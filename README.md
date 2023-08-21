@@ -9,7 +9,7 @@
 
 ***
 
-## 1. Prefácio 🤩
+## 1. Prefácio
 
 [Markdown](https://pt.wikipedia.org/wiki/Markdown) é uma linguagem de marcação
 muito popular entre os programadores. É usada em muitas plataformas que
@@ -43,14 +43,14 @@ Comando: <br>
 `md-links <caminho-do-arquivo> --stats`. <br>
  Veja o exemplo abaixo:
 
-    ![stats](./src/images/stats.png)
+    ![stats](./src/img/stats.png)
 
 4. Se você deseja verificar as estatistiscas e validar os links desse arquivo, utilize a propriedade <strong>--validade --stats</strong>, esta retornará o total de links encontrados no arquivo, quais desses são unicos e quais estão quebrados. <br>
 Comando: <br>
 `md-links <caminho-do-arquivo> --validate --stats`. <br>
  Veja o exemplo abaixo:
  
-    ![validate-and-stats](./src/images/validate-and-stats.png)
+    ![validate-and-stats](./src/img/validate-e-stats.png)
 
 
 ## 3. Fluxograma 📝
